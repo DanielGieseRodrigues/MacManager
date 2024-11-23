@@ -16,6 +16,7 @@ namespace MacManager.Application.UseCases.Pedidos.AdicionarPedidoUseCase
             _produtoRepository = produtoRepository;
         }
 
+        //Acho que esse é um dos metodos com mais regrinhas, poderia ter ficado menor e ter sido encurtado em outros metodos. Como estou fazendo um desafio de 2 dias deixei assim por exemplificacao.
         public async Task<AdicionarPedidoResponse> HandleAsync(AdicionarPedidoRequest request)
         {
             // Verifica se a lista de IDs de produtos não é nula ou vazia
@@ -53,7 +54,7 @@ namespace MacManager.Application.UseCases.Pedidos.AdicionarPedidoUseCase
             foreach (var produto in produtos.Where(p => p != null))
             {
                 var pedidoProduto = pedido.PedidoProdutos
-                    .FirstOrDefault(pp => pp.ProdutoId == produto.Id); // Verifica se o produto já está no pedido
+                    .FirstOrDefault(pp => pp.ProdutoId == produto.Id);
 
                 if (pedidoProduto != null)
                 {
@@ -62,7 +63,7 @@ namespace MacManager.Application.UseCases.Pedidos.AdicionarPedidoUseCase
                 }
                 else
                 {
-                    // Se o produto não estiver no pedido, adiciona ele com quantidade 1
+                    // Se o produto não estiver no pedido, adiciona ele com quantidade 1.
                     pedido.PedidoProdutos.Add(new PedidoProduto
                     {
                         Pedido = pedido,
@@ -72,7 +73,7 @@ namespace MacManager.Application.UseCases.Pedidos.AdicionarPedidoUseCase
                 }
             }
 
-            // Salvar o pedido com os produtos associados
+            // Chama a classe de repositorio para fazer o trabalho pesado.
             await _pedidoRepository.AdicionarAsync(pedido);
 
             return new AdicionarPedidoResponse

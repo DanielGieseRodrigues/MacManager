@@ -9,6 +9,7 @@ namespace MacManager.Infra.Repositories
         public ProdutoRepository(MacManagerContext context) : base(context)
         {
         }
-        // Métodos específicos para Produto, caso necessário
+
+        //Nao precisou fazer nenhum metodo especial de produto, mas fica aqui por consistencia, escabilidade e padronizacao.
     }
 }

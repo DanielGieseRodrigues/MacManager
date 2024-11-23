@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MacManager.Infra.Repositories
 {
+    //Classe exemplo de repositorio com alguns metodos mais especificos, boa parte deles para filtrar ou aumentar o tracking do ef com o include.
     public class PedidoProdutoRepository : IPedidoProdutoRepository
     {
         private readonly MacManagerContext _context;
@@ -26,18 +27,18 @@ namespace MacManager.Infra.Repositories
         public async Task<IEnumerable<PedidoProduto>> ObterPedidoProdutosPorPedidoIdAsync(int pedidoId)
         {
             return await _context.PedidoProdutos
-                .Include(pp => pp.Produto) // Inclui os produtos relacionados
+                .Include(pp => pp.Produto) 
                 .Where(pp => pp.PedidoId == pedidoId)
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<PedidoProduto>> ObterPedidosPorAreaCozinhaAsync(AreaCozinha areaCozinha)
         {
-            // Buscar pedidos com produtos filtrados por área de cozinha (usando o enum) e retornar PedidoProduto
+            // Buscar pedidos com produtos filtrados por área de cozinha (usando o enum) e retornar PedidoProduto, Uso do include para tracking
             return await _context.PedidoProdutos
-                .Include(pp => pp.Pedido) // Carregar o pedido relacionado
-                .Include(pp => pp.Produto) // Carregar o produto relacionado
-                .Where(pp => pp.Produto.AreaCozinha == areaCozinha) // Filtrar por área de cozinha (usando o enum)
+                .Include(pp => pp.Pedido) 
+                .Include(pp => pp.Produto) 
+                .Where(pp => pp.Produto.AreaCozinha == areaCozinha) 
                 .ToListAsync();
         }
     }

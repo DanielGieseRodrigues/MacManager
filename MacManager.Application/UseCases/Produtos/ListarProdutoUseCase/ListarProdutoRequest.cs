@@ -2,6 +2,6 @@
 {
     public class ListarProdutosRequest
     {
-        // Pode adicionar filtros aqui, caso necessário
+        // Poderia adicionar filtros aqui, caso necessário, hoje nao uso para nada a classe mas deixo ela aqui para escalar, e como consistencia / padrao.
     }
 }

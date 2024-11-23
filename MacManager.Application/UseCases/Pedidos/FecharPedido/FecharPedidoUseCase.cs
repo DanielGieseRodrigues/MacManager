@@ -13,6 +13,8 @@ namespace MacManager.Application.UseCases.Pedidos.FecharPedidoUseCase
             _pedidoRepository = pedidoRepository;
         }
 
+
+        //Metodo para encerrar o ciclo, sendo recusando ou concluindo o pedido.
         public async Task<FecharPedidoResponse> HandleAsync(FecharPedidoRequest request)
         {
             // Buscar o pedido pelo ID
@@ -27,7 +29,7 @@ namespace MacManager.Application.UseCases.Pedidos.FecharPedidoUseCase
                 };
             }
 
-            // Validar e atualizar o status
+            // Validar e atualizar o status, senao for status conhecido, cai fora por excessao.
             if (pedido.StatusPedido == StatusPedido.Fechado || pedido.StatusPedido == StatusPedido.Recusado)
             {
                 return new FecharPedidoResponse

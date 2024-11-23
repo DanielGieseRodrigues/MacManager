@@ -12,6 +12,7 @@ namespace MacManager.Application.UseCases.Produtos.ExcluirProdutoUseCase
             _produtoRepository = produtoRepository;
         }
 
+        //Exclusao padrao, o metodo handleAsync sera chamado por todos que herdarem de UseHandler.
         public async Task<ExcluirProdutoResponse> HandleAsync(ExcluirProdutoRequest request)
         {
             var produto = await _produtoRepository.ObterPorIdAsync(request.Id);

@@ -2,6 +2,7 @@
 
 namespace MacManager.Application.Interfaces.Repositories
 {
+    //Representacao/Contrato dos repositorios, nao tem mto o que falar aqui de especial.
     public interface IProdutoRepository
     {
         Task AdicionarAsync(Produto produto);

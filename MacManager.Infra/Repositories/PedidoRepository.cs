@@ -11,11 +11,14 @@ namespace MacManager.Infra.Repositories
         {
         }
 
+        // Essa classe é um exemplo de uma classe com metodo de acesso a dados especifico, que ai sim, nao existe no baseRepository.
         public async Task<IEnumerable<Pedido>> ObterTodosPedidosComProdutosAsync()
         {
+            //Dando o include para forçar o tracking do entity, importancia do ThenInclude tbm destacada.
+
             return await _context.Pedidos
-                .Include(p => p.PedidoProdutos) // Inclui os produtos associados
-                    .ThenInclude(pp => pp.Produto) // Inclui o produto dentro de PedidoProduto
+                .Include(p => p.PedidoProdutos) 
+                    .ThenInclude(pp => pp.Produto) 
                 .ToListAsync();
         }
 

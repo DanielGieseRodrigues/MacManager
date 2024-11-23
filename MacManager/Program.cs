@@ -4,12 +4,10 @@ using MacManager.Infra.Data;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
+//Startup padrao da webapi
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
 //Aqui eu fiz uma magiazinha para representar mais legal o enumerador no swagger, fazendo com que exiba os valores caracteres, para voces terem uma experiencia mais bacana :)
@@ -46,7 +44,7 @@ var app = builder.Build();
 //Garantindo o cors 2
 app.UseCors("AllowAll");
 
-//Precisa botar isso aqui para garantir o seed do EF, isso inclusive esta numa thread sendo discutida para ver se no futuro vai precisar ou nao fazer isso, e o meu papel eu fiz ( Fui lá encher o saco pedindo pra tirar a obrigação xD ).
+//Precisa botar isso aqui para garantir o seed do EF, isso inclusive esta numa thread sendo discutida para ver se no futuro vai precisar ou nao fazer isso, e o meu papel eu fiz. ( Fui lá encher o saco pedindo pra tirar a obrigação xD ).
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<MacManagerContext>();

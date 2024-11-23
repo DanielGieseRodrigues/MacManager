@@ -11,7 +11,7 @@ namespace MacManager.Application.UseCases.Produtos.EditarProdutoUseCase
         {
             _produtoRepository = produtoRepository;
         }
-
+        //Metodo padrao de edicao, nao tem muita magia nele.
         public async Task<EditarProdutoResponse> HandleAsync(EditarProdutoRequest request)
         {
             if (request.Produto == null)

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MacManager.Infra.Repositories
 {
+    //Repositorio base, uso em diversos projetos esse modelo dessa classezinha generica. Faz bem o trabalho de generalizar os metodos mais padroes de CRUD, e os mais especificos ficam na classe que herdará dela.
     public class RepositoryBase<TEntity> where TEntity : class
     {
         protected readonly MacManagerContext _context;

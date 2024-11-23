@@ -16,6 +16,7 @@ namespace MacManager.Application.UseCases.Pedidos
             _pedidoProdutoRepository = pedidoProdutoRepository;
         }
 
+        //Metodo para trazer os pedidos ja divididos e separados por categoria da cozinha.
         public async Task<ListarPedidosPorAreaResponse> HandleAsync(ListarPedidosPorAreaRequest request)
         {
             // Buscar os PedidoProdutos filtrados pela área de cozinha
@@ -35,7 +36,7 @@ namespace MacManager.Application.UseCases.Pedidos
                 .Select(group => new Pedido
                 {
                     Id = group.Key,
-                    PedidoProdutos = group.ToList() // Agrupar os PedidoProdutos para esse pedido
+                    PedidoProdutos = group.ToList() 
                 })
                 .ToList();
 

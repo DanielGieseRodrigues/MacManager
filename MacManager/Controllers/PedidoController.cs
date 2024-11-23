@@ -9,10 +9,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MacManager.API.Controllers
 {
+    //Atributo de marcacao de rota da api.
     [Route("api/[controller]")]
     [ApiController]
     public class PedidoController : ControllerBase
     {
+        //DI
         private readonly IUseCaseHandler<AdicionarPedidoRequest, AdicionarPedidoResponse> _adicionarPedidoUseCase;
         private readonly IUseCaseHandler<FecharPedidoRequest, FecharPedidoResponse> _fecharPedidoUseCase;
         private readonly IUseCaseHandler<ListarPedidosRequest, ListarPedidosResponse> _listarPedidosUseCase;
@@ -34,7 +36,7 @@ namespace MacManager.API.Controllers
             _listarPedidoPorAreaUseCase = listarperdidoporareausecase;
         }
 
-        // Método para adicionar um novo pedido
+       //Metodo que INICIA o Pedido.
         [HttpPost]
         public async Task<IActionResult> AdicionarPedido([FromBody] AdicionarPedidoRequest request)
         {
@@ -49,7 +51,7 @@ namespace MacManager.API.Controllers
             return Ok(response);
         }
 
-        // Método para fechar um pedido (marcar como concluído)
+        // Método para ENCERRAR um pedido, seja RECUSANDO ou Concluindo ( Fechando ).
         [HttpPatch("{id}/status")]
         public async Task<IActionResult> FecharPedido(int id, [FromBody] FecharPedidoRequest request)
         {
@@ -66,6 +68,7 @@ namespace MacManager.API.Controllers
             return Ok(response);
         }
 
+        //Metodo para listar todos os pedidos, Daria pra ter varias variacoes, pedindos em aberto, pedindos fechados, etc etc. Ou ter mais parametros tbm, mas pro exemplo assim serve até demais.
         [HttpGet]
         public async Task<IActionResult> ListarPedidos()
         {
@@ -75,7 +78,7 @@ namespace MacManager.API.Controllers
             if (!response.Sucesso)
                 return NotFound(response.Mensagem);
 
-            // Formatação para retornar os pedidos com dados refinados
+            // Formatação para retornar os pedidos formatadinhos. Task WhenAll para garantir a sincronicidade.
             var result = await Task.WhenAll(response.Pedidos.Select(async p =>
             {
                 // Buscar os produtos associados ao pedido pela tabela de junção usando o repositório
@@ -89,19 +92,20 @@ namespace MacManager.API.Controllers
                         pp.Produto.Id,
                         pp.Produto.Nome,
                         pp.Produto.Valor,
-                        AreaCozinha = pp.Produto.AreaCozinha.ToString(), // Enum como string
-                        Quantidade = pp.Quantidade // Aqui adiciona a quantidade do produto
+                        AreaCozinha = pp.Produto.AreaCozinha.ToString(), 
+                        Quantidade = pp.Quantidade 
                     }).ToList(),
-                    Status = p.StatusPedido.ToString(), // Enum como string
-                    DataDoPedido = p.DataDoPedido.ToString("yyyy-MM-dd HH:mm:ss"), // Formato de data
-                    DataConclusao = p.DataConclusaoPedido?.ToString("yyyy-MM-dd HH:mm:ss") // Formato de data
+                    Status = p.StatusPedido.ToString(), 
+                    DataDoPedido = p.DataDoPedido.ToString("yyyy-MM-dd HH:mm:ss"), // formatacao basica de data
+                    DataConclusao = p.DataConclusaoPedido?.ToString("yyyy-MM-dd HH:mm:ss") /* formatacao basica de data */
                 };
             }).ToList());
 
             return Ok(result);
         }
 
-        // Endpoint para filtrar pedidos por área de cozinha
+
+        // Metodo para listar os pedidos de cada Area da cozinha, especificadamente. 
         [HttpGet("area-cozinha")]
         public async Task<IActionResult> ListarPedidosPorArea([FromQuery] AreaCozinha areaCozinha)
         {
@@ -119,7 +123,7 @@ namespace MacManager.API.Controllers
                     pp.Produto.Id,
                     pp.Produto.Nome,
                     pp.Produto.Valor,
-                    AreaCozinha = pp.Produto.AreaCozinha.ToString(), // Exibindo o valor do enum como string
+                    AreaCozinha = pp.Produto.AreaCozinha.ToString(),
                     pp.Quantidade
                 }).ToList()
             }).ToList();

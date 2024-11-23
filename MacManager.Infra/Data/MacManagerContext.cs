@@ -4,14 +4,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MacManager.Infra.Data
 {
+    //Contexto padrao do EF, nada de muito novo por aqui, classe de relacionamentos , seeding, etc.
     public class MacManagerContext : DbContext
     {
         public MacManagerContext(DbContextOptions<MacManagerContext> options) : base(options) { }
 
-        //Contextos
+        //DbSets da aplicacao, da pra pensar neles como nossas tables classicas do sql.
         public DbSet<Produto> Produtos { get; set; }
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<PedidoProduto> PedidoProdutos { get; set; }
+
 
         //Fazendo o seeding dos dados iniciais, tentei por bastante produto para ficar legal de usar.
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -29,7 +31,7 @@ namespace MacManager.Infra.Data
                 .WithMany()
                 .HasForeignKey(pp => pp.ProdutoId);
 
-            //Seed inicial
+            //Seed inicial, adicionei alguns ao exemplo inicial fornecido para maior dinamica.
             modelBuilder.Entity<Produto>().HasData(
                 //Fritos
                 new Produto { Id = 1, Nome = "Porção de batata frita", AreaCozinha = AreaCozinha.Fritos, Valor = 15 },

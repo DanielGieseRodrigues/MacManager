@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MacManager.API.Controllers
 {
+    //Atributo de marcacao de rota da api.
     [Route("api/[controller]")]
     [ApiController]
     public class ProdutoController : ControllerBase
     {
+        //Injecoes de dependencia.
         private readonly IUseCaseHandler<AdicionarProdutoRequest, AdicionarProdutoResponse> _adicionarProdutoUseCase;
         private readonly IUseCaseHandler<EditarProdutoRequest, EditarProdutoResponse> _editarProdutoUseCase;
         private readonly IUseCaseHandler<ExcluirProdutoRequest, ExcluirProdutoResponse> _excluirProdutoUseCase;
@@ -28,7 +30,7 @@ namespace MacManager.API.Controllers
             _listarProdutosUseCase = listarProdutosUseCase;
         }
 
-        // Método de Adicionar Produto (implementado)
+        //Daqui pra baixo é o crud basicao de Produto, ctrlc ctrl v quase, para gerenciamento dos produtos, não foi exigido no teste, mas pensei em fazer como um plus. Aqui cabia um validator da vida, ficaria bacana.
         [HttpPost]
         public async Task<IActionResult> AdicionarProduto([FromBody] AdicionarProdutoRequest request)
         {
@@ -43,7 +45,6 @@ namespace MacManager.API.Controllers
             return Ok(response);
         }
 
-        // Método de Editar Produto (implementado)
         [HttpPut("{id}")]
         public async Task<IActionResult> EditarProduto(int id, [FromBody] EditarProdutoRequest request)
         {
@@ -59,13 +60,13 @@ namespace MacManager.API.Controllers
             return Ok(response);
         }
 
-        // Método de Listar Produtos (implementado)
         [HttpGet]
         public async Task<IActionResult> ListarProdutos()
         {
             var request = new ListarProdutosRequest();
             var response = await _listarProdutosUseCase.HandleAsync(request);
 
+            //Truquezinho para representacao do enum e do ID que normalmente é escondido.
             var result = response.Produtos.Select(p => new
             {
                 p.Id,
@@ -80,7 +81,6 @@ namespace MacManager.API.Controllers
             return Ok(result);
         }
 
-        // Método de Deletar Produto (implementado)
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarProduto(int id)
         {

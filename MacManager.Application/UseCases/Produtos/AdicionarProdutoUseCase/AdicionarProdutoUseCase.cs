@@ -13,6 +13,7 @@ namespace MacManager.Application.UseCases.Produtos.AdicionarProdutoUseCase
             _produtoRepository = pedidoRepository;
         }
 
+        //Aqui poderia ter validators da vida, ou até mesmo ter inventado mais regras de negócio, mas acho que pro exemplo já basta.
         public async Task<AdicionarProdutoResponse> HandleAsync(AdicionarProdutoRequest request)
         {
             if (request.Produto == null)
@@ -25,6 +26,7 @@ namespace MacManager.Application.UseCases.Produtos.AdicionarProdutoUseCase
                 };
             }
 
+            //Chama o repositorio para adicionar o item no _context.
             await _produtoRepository.AdicionarAsync(request.Produto);
 
             return new AdicionarProdutoResponse
