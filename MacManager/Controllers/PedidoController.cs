@@ -64,7 +64,6 @@ namespace MacManager.API.Controllers
             return Ok(response);
         }
 
-        // Método para listar todos os pedidos
         [HttpGet]
         public async Task<IActionResult> ListarPedidos()
         {
@@ -78,17 +77,18 @@ namespace MacManager.API.Controllers
             var result = await Task.WhenAll(response.Pedidos.Select(async p =>
             {
                 // Buscar os produtos associados ao pedido pela tabela de junção usando o repositório
-                var produtos = await _pedidoProdutoRepository.ObterProdutosPorPedidoIdAsync(p.Id);
+                var pedidoProdutos = await _pedidoProdutoRepository.ObterPedidoProdutosPorPedidoIdAsync(p.Id);
 
                 return new
                 {
                     p.Id,
-                    Produtos = produtos.Select(prod => new
+                    Produtos = pedidoProdutos.Select(pp => new
                     {
-                        prod.Id,
-                        prod.Nome,
-                        prod.Valor,
-                        AreaCozinha = prod.AreaCozinha.ToString() // Enum como string
+                        pp.Produto.Id,
+                        pp.Produto.Nome,
+                        pp.Produto.Valor,
+                        AreaCozinha = pp.Produto.AreaCozinha.ToString(), // Enum como string
+                        Quantidade = pp.Quantidade // Aqui adiciona a quantidade do produto
                     }).ToList(),
                     Status = p.StatusPedido.ToString(), // Enum como string
                     DataDoPedido = p.DataDoPedido.ToString("yyyy-MM-dd HH:mm:ss"), // Formato de data
@@ -98,5 +98,6 @@ namespace MacManager.API.Controllers
 
             return Ok(result);
         }
+
     }
 }
