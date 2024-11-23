@@ -1,0 +1,6 @@
+@MacManager_HostAddress = http://localhost:5105
+
+GET {{MacManager_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
