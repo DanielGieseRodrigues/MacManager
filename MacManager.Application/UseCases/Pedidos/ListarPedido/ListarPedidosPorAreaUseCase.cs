@@ -1,46 +1,50 @@
 ﻿using MacManager.Application.Interfaces;
 using MacManager.Application.Interfaces.Repositories;
+using MacManager.Application.UseCases.Pedidos.ListarPedido;
+using MacManager.Domain.Entities;
+using MacManager.Domain.ValueObjects;
 
-namespace MacManager.Application.UseCases.Pedidos.ListarPedido
+namespace MacManager.Application.UseCases.Pedidos
 {
     public class ListarPedidosPorAreaUseCase : IUseCaseHandler<ListarPedidosPorAreaRequest, ListarPedidosPorAreaResponse>
     {
         private readonly IPedidoRepository _pedidoRepository;
+        private readonly IPedidoProdutoRepository _pedidoProdutoRepository;
 
-        public ListarPedidosPorAreaUseCase(IPedidoRepository pedidoRepository)
+        public ListarPedidosPorAreaUseCase(IPedidoRepository pedidoRepository, IPedidoProdutoRepository pedidoProdutoRepository)
         {
             _pedidoRepository = pedidoRepository;
+            _pedidoProdutoRepository = pedidoProdutoRepository;
         }
 
         public async Task<ListarPedidosPorAreaResponse> HandleAsync(ListarPedidosPorAreaRequest request)
         {
-            // Verificar se a área de cozinha foi fornecida
-            if (request.AreaCozinha == null)
+            // Buscar os PedidoProdutos filtrados pela área de cozinha
+            var pedidoProdutos = await _pedidoProdutoRepository.ObterPedidosPorAreaCozinhaAsync(request.AreaCozinha);
+
+            if (!pedidoProdutos.Any())
             {
                 return new ListarPedidosPorAreaResponse
                 {
                     Sucesso = false,
-                    Mensagem = "Área de cozinha não fornecida."
+                    Mensagem = "Nenhum pedido encontrado para a área de cozinha especificada."
                 };
             }
-
-            // Buscar pedidos com produtos filtrados por área de cozinha
-            var pedidos = await _pedidoRepository.ObterPedidosPorAreaCozinhaAsync(request.AreaCozinha);
-
-            if (!pedidos.Any())
-            {
-                return new ListarPedidosPorAreaResponse
+            // Agrupando os PedidoProdutos por PedidoId
+            var pedidos = pedidoProdutos
+                .GroupBy(pp => pp.PedidoId)
+                .Select(group => new Pedido
                 {
-                    Sucesso = false,
-                    Mensagem = "Nenhum pedido encontrado para a área de cozinha fornecida."
-                };
-            }
+                    Id = group.Key,
+                    PedidoProdutos = group.ToList() // Agrupar os PedidoProdutos para esse pedido
+                })
+                .ToList();
 
             return new ListarPedidosPorAreaResponse
             {
                 Sucesso = true,
-                Mensagem = "Pedidos listados com sucesso.",
-                Pedidos = pedidos.ToList()
+                Mensagem = "Pedidos filtrados por área de cozinha listados com sucesso.",
+                Pedidos = pedidos
             };
         }
     }

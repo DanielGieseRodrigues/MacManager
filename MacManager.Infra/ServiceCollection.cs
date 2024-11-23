@@ -1,5 +1,6 @@
 ﻿using MacManager.Application.Interfaces;
 using MacManager.Application.Interfaces.Repositories;
+using MacManager.Application.UseCases.Pedidos;
 using MacManager.Application.UseCases.Pedidos.AdicionarPedidoUseCase;
 using MacManager.Application.UseCases.Pedidos.FecharPedidoUseCase;
 using MacManager.Application.UseCases.Pedidos.ListarPedido;

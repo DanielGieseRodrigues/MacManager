@@ -1,9 +1,12 @@
 ﻿using MacManager.Application.Interfaces;
 using MacManager.Application.Interfaces.Repositories;
+using MacManager.Application.UseCases.Pedidos;
 using MacManager.Application.UseCases.Pedidos.AdicionarPedidoUseCase;
 using MacManager.Application.UseCases.Pedidos.FecharPedidoUseCase;
+using MacManager.Application.UseCases.Pedidos.ListarPedido;
 using MacManager.Application.UseCases.Pedidos.ListarPedidosUseCase;
 using MacManager.Domain.Entities;
+using MacManager.Domain.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -18,18 +21,22 @@ namespace MacManager.API.Controllers
         private readonly IUseCaseHandler<AdicionarPedidoRequest, AdicionarPedidoResponse> _adicionarPedidoUseCase;
         private readonly IUseCaseHandler<FecharPedidoRequest, FecharPedidoResponse> _fecharPedidoUseCase;
         private readonly IUseCaseHandler<ListarPedidosRequest, ListarPedidosResponse> _listarPedidosUseCase;
-        private readonly IPedidoProdutoRepository _pedidoProdutoRepository; // Repositório para acessar a tabela de junção
+        private readonly IUseCaseHandler<ListarPedidosPorAreaRequest, ListarPedidosPorAreaResponse> _listarPedidoPorAreaUseCase;
+
+        private readonly IPedidoProdutoRepository _pedidoProdutoRepository; 
 
         public PedidoController(
             IUseCaseHandler<AdicionarPedidoRequest, AdicionarPedidoResponse> adicionarPedidoUseCase,
             IUseCaseHandler<FecharPedidoRequest, FecharPedidoResponse> fecharPedidoUseCase,
             IUseCaseHandler<ListarPedidosRequest, ListarPedidosResponse> listarPedidosUseCase,
-            IPedidoProdutoRepository pedidoProdutoRepository) // Injeção do repositório de PedidoProduto
+            IUseCaseHandler<ListarPedidosPorAreaRequest, ListarPedidosPorAreaResponse> listarperdidoporareausecase,
+            IPedidoProdutoRepository pedidoProdutoRepository)
         {
             _adicionarPedidoUseCase = adicionarPedidoUseCase;
             _fecharPedidoUseCase = fecharPedidoUseCase;
             _listarPedidosUseCase = listarPedidosUseCase;
             _pedidoProdutoRepository = pedidoProdutoRepository; // Atribuição
+            _listarPedidoPorAreaUseCase = listarperdidoporareausecase;
         }
 
         // Método para adicionar um novo pedido
@@ -95,6 +102,32 @@ namespace MacManager.API.Controllers
                     DataConclusao = p.DataConclusaoPedido?.ToString("yyyy-MM-dd HH:mm:ss") // Formato de data
                 };
             }).ToList());
+
+            return Ok(result);
+        }
+
+        // Endpoint para filtrar pedidos por área de cozinha
+        [HttpGet("area-cozinha")]
+        public async Task<IActionResult> ListarPedidosPorArea([FromQuery] AreaCozinha areaCozinha)
+        {
+            var request = new ListarPedidosPorAreaRequest { AreaCozinha = areaCozinha };
+            var response = await _listarPedidoPorAreaUseCase.HandleAsync(request);
+
+            if (!response.Sucesso)
+                return NotFound(response.Mensagem);
+
+            var result = response.Pedidos.Select(p => new
+            {
+                p.Id,
+                Produtos = p.PedidoProdutos.Select(pp => new
+                {
+                    pp.Produto.Id,
+                    pp.Produto.Nome,
+                    pp.Produto.Valor,
+                    AreaCozinha = pp.Produto.AreaCozinha.ToString(), // Exibindo o valor do enum como string
+                    pp.Quantidade
+                }).ToList()
+            }).ToList();
 
             return Ok(result);
         }

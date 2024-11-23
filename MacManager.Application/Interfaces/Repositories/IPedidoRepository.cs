@@ -10,7 +10,5 @@ namespace MacManager.Application.Interfaces.Repositories
         Task<Pedido?> ObterPorIdAsync(int id);
         Task AtualizarAsync(Pedido pedido);
         Task<IEnumerable<Pedido>> ObterTodosPedidosComProdutosAsync();
-        Task<IEnumerable<Pedido>> ObterPedidosPorAreaCozinhaAsync(AreaCozinha areaCozinha);
-
     }
 }

@@ -20,14 +20,6 @@ namespace MacManager.Infra.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Pedido>> ObterPedidosPorAreaCozinhaAsync(AreaCozinha areaCozinha)
-        {
-            // Buscar pedidos com produtos filtrados por área de cozinha (usando o enum)
-            return await _context.Pedidos
-                .Include(p => p.PedidoProdutos) // Carregar os produtos relacionados
-                 .ThenInclude(pp => pp.Produto) // Inclui o produto dentro de PedidoProduto
-                .Where(p => p.PedidoProdutos.Any(prod => prod.Produto.AreaCozinha == areaCozinha)) // Filtrar por área de cozinha (usando o enum)
-                .ToListAsync();
-        }
+       
     }
 }
