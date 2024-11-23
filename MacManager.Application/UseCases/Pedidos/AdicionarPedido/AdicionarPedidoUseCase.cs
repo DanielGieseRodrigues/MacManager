@@ -51,14 +51,27 @@ namespace MacManager.Application.UseCases.Pedidos.AdicionarPedidoUseCase
                 StatusPedido = StatusPedido.Aberto
             };
 
-            // Associar os produtos ao pedido utilizando a tabela de junção
+            // Adicionar os produtos ao pedido
             foreach (var produto in produtos.Where(p => p != null))
             {
-                pedido.PedidoProdutos.Add(new PedidoProduto
+                var pedidoProduto = pedido.PedidoProdutos
+                    .FirstOrDefault(pp => pp.ProdutoId == produto.Id); // Verifica se o produto já está no pedido
+
+                if (pedidoProduto != null)
                 {
-                    Pedido = pedido,
-                    ProdutoId = produto.Id
-                });
+                    // Se o produto já existir no pedido, incrementa a quantidade
+                    pedidoProduto.Quantidade++;
+                }
+                else
+                {
+                    // Se o produto não estiver no pedido, adiciona ele com quantidade 1
+                    pedido.PedidoProdutos.Add(new PedidoProduto
+                    {
+                        Pedido = pedido,
+                        ProdutoId = produto.Id,
+                        Quantidade = 1
+                    });
+                }
             }
 
             // Salvar o pedido com os produtos associados
