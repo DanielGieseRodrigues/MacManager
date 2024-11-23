@@ -23,14 +23,14 @@ namespace MacManager.Tests
 
         public PedidosControllerTests()
         {
-            // Criação dos mocks para todos os casos de uso
+            //Criacao de mocks para casos de uso
             _adicionarPedidoUseCaseMock = new Mock<IUseCaseHandler<AdicionarPedidoRequest, AdicionarPedidoResponse>>();
             _fecharPedidoUseCaseMock = new Mock<IUseCaseHandler<FecharPedidoRequest, FecharPedidoResponse>>();
             _listarPedidosUseCaseMock = new Mock<IUseCaseHandler<ListarPedidosRequest, ListarPedidosResponse>>();
             _listarPedidosPorAreaUseCaseMock = new Mock<IUseCaseHandler<ListarPedidosPorAreaRequest, ListarPedidosPorAreaResponse>>();
             _pedidoProdutoRepositoryMock = new Mock<IPedidoProdutoRepository>();
 
-            // Injeção de dependências na controller
+            //Fazendo a DI na controller
             _controller = new PedidoController(
                 _adicionarPedidoUseCaseMock.Object,
                 _fecharPedidoUseCaseMock.Object,
@@ -43,7 +43,7 @@ namespace MacManager.Tests
         [Fact]
         public async Task ListarPedidosPorArea_DeveRetornarOkQuandoPedidosExistirem()
         {
-            // Arrange
+            //Arrange
             var areaCozinha = AreaCozinha.Fritos;
             var response = new ListarPedidosPorAreaResponse
             {
@@ -55,13 +55,13 @@ namespace MacManager.Tests
                 .Setup(x => x.HandleAsync(It.IsAny<ListarPedidosPorAreaRequest>()))
                 .ReturnsAsync(response);
 
-            // Act
+            //Act
             var result = await _controller.ListarPedidosPorArea(areaCozinha);
 
-            // Assert
+            //ASSERT
             var okResult = Assert.IsType<OkObjectResult>(result);
             var resultValue = Assert.IsAssignableFrom<IEnumerable<dynamic>>(okResult.Value);
-            Assert.Single(resultValue);  // Espera que haja pelo menos 1 pedido
+            Assert.Single(resultValue);  // Checadinha para ver se voltou algum registro.
         }
 
         [Fact]
@@ -85,7 +85,7 @@ namespace MacManager.Tests
             // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             var resultValue = Assert.IsType<string>(notFoundResult.Value);
-            Assert.Equal("Nenhum pedido encontrado para a área de cozinha especificada.", resultValue);
+            Assert.Equal("Nenhum pedido encontrado para a área de cozinha especificada.", resultValue); //Checa mensagem padrao do sistema, para maior controle ainda seria legal usar uns .rsx ( resources ) para garantir a string.
         }
     }
 }

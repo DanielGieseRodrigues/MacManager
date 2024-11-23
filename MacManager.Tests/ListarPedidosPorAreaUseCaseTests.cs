@@ -26,7 +26,7 @@ namespace MacManager.Tests
             // Arrange
             var areaCozinha = AreaCozinha.Fritos;
 
-            // Criando os produtos e pedidos para simular
+            //Cria os produtos e pedidos para o teste unitario
             var pedidoProduto1 = new PedidoProduto
             {
                 Produto = new Produto { Nome = "Frango Frito Test", AreaCozinha = AreaCozinha.Fritos },
@@ -49,12 +49,11 @@ namespace MacManager.Tests
                 Quantidade = 1
             };
 
-            // Configurando o mock do repositório para retornar os produtos relacionados à área de cozinha
             _pedidoProdutoRepositoryMock
                 .Setup(repo => repo.ObterPedidosPorAreaCozinhaAsync(areaCozinha))
                 .ReturnsAsync(new List<PedidoProduto> { pedidoProduto1, pedidoProduto2, pedidoProduto3 });
 
-            // Criando o mock do UseCase
+            //UseCases
             var useCaseResponse = new ListarPedidosPorAreaResponse
             {
                 Sucesso = true,
@@ -69,10 +68,10 @@ namespace MacManager.Tests
                 .Setup(x => x.ObterPedidosPorAreaCozinhaAsync(It.IsAny<AreaCozinha>()))
                 .ReturnsAsync(new List<PedidoProduto> { pedidoProduto1, pedidoProduto2 });
 
-            // Act
+            //ACT
             var result = await _useCase.HandleAsync(new ListarPedidosPorAreaRequest { AreaCozinha = areaCozinha });
 
-            // Assert
+            //ASSERT 
             Assert.True(result.Sucesso);
             Assert.Equal(2, result.Pedidos?.Count()); // Espera-se que apenas os pedidos 1 e 2 (da área Fritos) sejam retornados
 
@@ -99,7 +98,7 @@ namespace MacManager.Tests
 
             // Assert
             Assert.False(result.Sucesso);
-            Assert.Equal("Nenhum pedido encontrado para a área de cozinha especificada.", result.Mensagem);
+            Assert.Equal("Nenhum pedido encontrado para a área de cozinha especificada.", result.Mensagem); //Mesma ideia, checo a string diretao, mas poderia ser algum tipo de .rsx da vida para garantir integridade.
         }
     }
 }
