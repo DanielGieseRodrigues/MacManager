@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace MacManager.Infra.Data
 {
     //Contexto padrao do EF, nada de muito novo por aqui, classe de relacionamentos , seeding, etc.
+    //Obs : Chamei de MacManager em relacao ao MCDonalds, um nome ficticio apenas para nosso projetinho. 
     public class MacManagerContext : DbContext
     {
         public MacManagerContext(DbContextOptions<MacManagerContext> options) : base(options) { }

@@ -27,7 +27,7 @@ namespace MacManager.Infra.Repositories
         public async Task<IEnumerable<PedidoProduto>> ObterPedidoProdutosPorPedidoIdAsync(int pedidoId)
         {
             return await _context.PedidoProdutos
-                .Include(pp => pp.Produto) 
+                .Include(pp => pp.Produto)
                 .Where(pp => pp.PedidoId == pedidoId)
                 .ToListAsync();
         }
@@ -36,9 +36,9 @@ namespace MacManager.Infra.Repositories
         {
             // Buscar pedidos com produtos filtrados por área de cozinha (usando o enum) e retornar PedidoProduto, Uso do include para tracking
             return await _context.PedidoProdutos
-                .Include(pp => pp.Pedido) 
-                .Include(pp => pp.Produto) 
-                .Where(pp => pp.Produto.AreaCozinha == areaCozinha) 
+                .Include(pp => pp.Pedido)
+                .Include(pp => pp.Produto)
+                .Where(pp => pp.Produto.AreaCozinha == areaCozinha)
                 .ToListAsync();
         }
     }

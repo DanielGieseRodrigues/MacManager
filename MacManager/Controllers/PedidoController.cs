@@ -36,7 +36,7 @@ namespace MacManager.API.Controllers
             _listarPedidoPorAreaUseCase = listarperdidoporareausecase;
         }
 
-       //Metodo que INICIA o Pedido.
+        //Metodo que INICIA o Pedido.
         [HttpPost]
         public async Task<IActionResult> AdicionarPedido([FromBody] AdicionarPedidoRequest request)
         {
@@ -92,10 +92,10 @@ namespace MacManager.API.Controllers
                         pp.Produto.Id,
                         pp.Produto.Nome,
                         pp.Produto.Valor,
-                        AreaCozinha = pp.Produto.AreaCozinha.ToString(), 
-                        Quantidade = pp.Quantidade 
+                        AreaCozinha = pp.Produto.AreaCozinha.ToString(),
+                        Quantidade = pp.Quantidade
                     }).ToList(),
-                    Status = p.StatusPedido.ToString(), 
+                    Status = p.StatusPedido.ToString(),
                     DataDoPedido = p.DataDoPedido.ToString("yyyy-MM-dd HH:mm:ss"), // formatacao basica de data
                     DataConclusao = p.DataConclusaoPedido?.ToString("yyyy-MM-dd HH:mm:ss") /* formatacao basica de data */
                 };

@@ -36,7 +36,7 @@ namespace MacManager.Application.UseCases.Pedidos
                 .Select(group => new Pedido
                 {
                     Id = group.Key,
-                    PedidoProdutos = group.ToList() 
+                    PedidoProdutos = group.ToList()
                 })
                 .ToList();
 

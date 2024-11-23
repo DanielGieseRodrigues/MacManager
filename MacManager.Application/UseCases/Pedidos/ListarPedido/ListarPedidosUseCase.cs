@@ -32,7 +32,7 @@ namespace MacManager.Application.UseCases.Pedidos.ListarPedidosUseCase
             foreach (var pedido in pedidos)
             {
                 var pedidoProdutos = await _pedidoProdutoRepository.ObterPedidoProdutosPorPedidoIdAsync(pedido.Id);
-                pedido.PedidoProdutos = pedidoProdutos.ToList(); 
+                pedido.PedidoProdutos = pedidoProdutos.ToList();
             }
 
             return new ListarPedidosResponse
