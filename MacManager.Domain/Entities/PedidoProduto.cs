@@ -1,6 +1,4 @@
-﻿using MacManager.Domain.Entities;
-
-namespace MacManager.Domain.Entities
+﻿namespace MacManager.Domain.Entities
 {
     public class PedidoProduto
     {

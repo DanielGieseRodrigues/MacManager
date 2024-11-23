@@ -1,6 +1,5 @@
 ﻿using MacManager.Application.Interfaces.Repositories;
 using MacManager.Domain.Entities;
-using MacManager.Domain.ValueObjects;
 using MacManager.Infra.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +19,6 @@ namespace MacManager.Infra.Repositories
                 .ToListAsync();
         }
 
-       
+
     }
 }

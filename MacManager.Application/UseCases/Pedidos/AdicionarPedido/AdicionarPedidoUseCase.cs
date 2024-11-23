@@ -2,8 +2,6 @@
 using MacManager.Application.Interfaces.Repositories;
 using MacManager.Domain.Entities;
 using MacManager.Domain.ValueObjects;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MacManager.Application.UseCases.Pedidos.AdicionarPedidoUseCase
 {

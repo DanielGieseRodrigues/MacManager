@@ -1,5 +1,4 @@
 ﻿using MacManager.Domain.Entities;
-using MacManager.Domain.ValueObjects;
 
 namespace MacManager.Application.Interfaces.Repositories
 {

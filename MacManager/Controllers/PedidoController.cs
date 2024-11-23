@@ -1,16 +1,11 @@
 ﻿using MacManager.Application.Interfaces;
 using MacManager.Application.Interfaces.Repositories;
-using MacManager.Application.UseCases.Pedidos;
 using MacManager.Application.UseCases.Pedidos.AdicionarPedidoUseCase;
 using MacManager.Application.UseCases.Pedidos.FecharPedidoUseCase;
 using MacManager.Application.UseCases.Pedidos.ListarPedido;
 using MacManager.Application.UseCases.Pedidos.ListarPedidosUseCase;
-using MacManager.Domain.Entities;
 using MacManager.Domain.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MacManager.API.Controllers
 {
@@ -23,7 +18,7 @@ namespace MacManager.API.Controllers
         private readonly IUseCaseHandler<ListarPedidosRequest, ListarPedidosResponse> _listarPedidosUseCase;
         private readonly IUseCaseHandler<ListarPedidosPorAreaRequest, ListarPedidosPorAreaResponse> _listarPedidoPorAreaUseCase;
 
-        private readonly IPedidoProdutoRepository _pedidoProdutoRepository; 
+        private readonly IPedidoProdutoRepository _pedidoProdutoRepository;
 
         public PedidoController(
             IUseCaseHandler<AdicionarPedidoRequest, AdicionarPedidoResponse> adicionarPedidoUseCase,

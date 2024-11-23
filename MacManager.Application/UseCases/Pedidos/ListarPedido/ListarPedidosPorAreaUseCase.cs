@@ -2,7 +2,6 @@
 using MacManager.Application.Interfaces.Repositories;
 using MacManager.Application.UseCases.Pedidos.ListarPedido;
 using MacManager.Domain.Entities;
-using MacManager.Domain.ValueObjects;
 
 namespace MacManager.Application.UseCases.Pedidos
 {
