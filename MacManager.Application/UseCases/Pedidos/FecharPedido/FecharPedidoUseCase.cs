@@ -40,7 +40,7 @@ namespace MacManager.Application.UseCases.Pedidos.FecharPedidoUseCase
             }
 
             pedido.StatusPedido = request.AtualizacaoStatus;
-
+            pedido.DataConclusaoPedido = DateTime.Now;
             // Atualizar no repositório
             await _pedidoRepository.AtualizarAsync(pedido);
 

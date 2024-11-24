@@ -9,6 +9,6 @@ namespace MacManager.Application.Interfaces.Repositories
         Task<IEnumerable<Pedido>> ObterTodosAsync();
         Task<Pedido?> ObterPorIdAsync(int id);
         Task AtualizarAsync(Pedido pedido);
-        Task<IEnumerable<Pedido>> ObterTodosPedidosComProdutosAsync();
+        Task<IEnumerable<Pedido>> ObterTodosPedidosComProdutosAsync(bool isAtivo);
     }
 }

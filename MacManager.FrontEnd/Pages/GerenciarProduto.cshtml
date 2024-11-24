@@ -1,0 +1,91 @@
+﻿@page
+@model GerenciarProdutoModel
+@{
+    ViewData["Title"] = "Gerenciar Produtos";
+}
+<div class="container">
+    <h1 class="mb-4 text-center"><i class="fas fa-box text-primary"></i> Gerenciar Produtos</h1>
+
+    <!-- Formulário de Produto -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Adicionar/Editar Produto</h5>
+            <form id="produtoForm">
+                <input type="hidden" id="produtoId" />
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Nome do Produto</label>
+                    <input type="text" class="form-control" id="nome" placeholder="Digite o nome do produto" required />
+                </div>
+                <div class="mb-3">
+                    <label for="areaCozinha" class="form-label">Área da Cozinha</label>
+                    <select class="form-select" id="areaCozinha">
+                        <option value="Fritos">Fritos</option>
+                        <option value="Grelhados">Grelhados</option>
+                        <option value="Sobremesas">Sobremesas</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i> Salvar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lista de Produtos -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">Lista de Produtos</h5>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nome</th>
+                        <th>Área da Cozinha</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="listaProdutos">
+                    <!-- Os produtos serão carregados aqui -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const apiUrl = 'https://localhost:7002/api/Produto';
+
+        // Função para carregar os produtos
+        function carregarProdutos() {
+            $.get(apiUrl, function (data) {
+                const tabela = $('#listaProdutos');
+                tabela.empty(); // Limpa a tabela
+
+                if (data.length > 0) {
+                    data.forEach((produto, index) => {
+                        tabela.append(`
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${produto.nome}</td>
+                                <td>${produto.areaCozinha}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning btn-editar" data-id="${produto.id}" data-nome="${produto.nome}" data-area="${produto.areaCozinha}">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                    <button class="btn btn-sm btn-danger btn-excluir" data-id="${produto.id}">
+                                        <i class="fas fa-trash"></i> Excluir
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                } else {
+                    tabela.append('<tr><td colspan="4" class="text-center">Nenhum produto encontrado.</td></tr>');
+                }
+            });
+        }
+
+        // Carregar produtos na inicialização
+        carregarProdutos();
+    });
+</script>

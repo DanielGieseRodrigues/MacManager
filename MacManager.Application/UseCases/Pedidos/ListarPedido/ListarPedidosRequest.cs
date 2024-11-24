@@ -2,6 +2,6 @@
 {
     public class ListarPedidosRequest
     {
-        // Nenhum campo específico, mas adicionado para manter consistência, como outros do projetinho.
+        public bool Ativo { get; set; }
     }
 }

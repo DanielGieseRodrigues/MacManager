@@ -1,0 +1,55 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+<div class="text-center">
+    <h1 class="mb-4"><i class="fas fa-utensils"></i> Bem-vindo ao MacManager</h1>
+    <p class="mb-4">Gerencie seus pedidos e produtos com facilidade!</p>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <a href="/GerenciarProduto" class="text-decoration-none">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-box fa-3x mb-3 text-primary"></i>
+                        <h5 class="card-title">Gerenciar Produtos</h5>
+                        <p class="card-text">Adicione, edite ou remova produtos.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="/CriarPedido" class="text-decoration-none">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-plus-circle fa-3x mb-3 text-success"></i>
+                        <h5 class="card-title">Criar Pedido</h5>
+                        <p class="card-text">Crie pedidos e adicione produtos.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="/EncerrarPedido" class="text-decoration-none">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-check-circle fa-3x mb-3 text-danger"></i>
+                        <h5 class="card-title">Encerrar Pedido</h5>
+                        <p class="card-text">Conclua ou recuse pedidos.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="/AreasDeCozinha" class="text-decoration-none">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-kitchen-set fa-3x mb-3 text-warning"></i>
+                        <h5 class="card-title">Áreas de Cozinha</h5>
+                        <p class="card-text">Veja pedidos organizados por área.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

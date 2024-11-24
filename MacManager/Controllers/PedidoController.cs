@@ -70,9 +70,9 @@ namespace MacManager.API.Controllers
 
         //Metodo para listar todos os pedidos, Daria pra ter varias variacoes, pedindos em aberto, pedindos fechados, etc etc. Ou ter mais parametros tbm, mas pro exemplo assim serve até demais.
         [HttpGet]
-        public async Task<IActionResult> ListarPedidos()
+        public async Task<IActionResult> ListarPedidos(bool isAtivo)
         {
-            var request = new ListarPedidosRequest();
+            var request = new ListarPedidosRequest { Ativo = isAtivo };
             var response = await _listarPedidosUseCase.HandleAsync(request);
 
             if (!response.Sucesso)

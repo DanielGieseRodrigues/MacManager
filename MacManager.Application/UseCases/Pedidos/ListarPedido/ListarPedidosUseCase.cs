@@ -17,7 +17,7 @@ namespace MacManager.Application.UseCases.Pedidos.ListarPedidosUseCase
 
         public async Task<ListarPedidosResponse> HandleAsync(ListarPedidosRequest request)
         {
-            var pedidos = await _pedidoRepository.ObterTodosAsync();
+            var pedidos = await _pedidoRepository.ObterTodosPedidosComProdutosAsync(request.Ativo);
 
             if (!pedidos.Any())
             {
