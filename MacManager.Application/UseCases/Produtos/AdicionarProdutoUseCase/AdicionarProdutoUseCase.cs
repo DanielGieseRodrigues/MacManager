@@ -25,6 +25,15 @@ namespace MacManager.Application.UseCases.Produtos.AdicionarProdutoUseCase
                     Mensagem = "Produto não informado. Erro ao inserir produto na base de dados."
                 };
             }
+            if (request.Produto.Valor < 0)
+            {
+                return new AdicionarProdutoResponse
+                {
+                    Sucesso = false,
+                    Produto = new Produto { Nome = "Valor abaixo de zero." },
+                    Mensagem = "Valor do produto não pode ser inferior a zero !"
+                };
+            }
 
             //Chama o repositorio para adicionar o item no _context.
             await _produtoRepository.AdicionarAsync(request.Produto);

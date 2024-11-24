@@ -1,0 +1,176 @@
+﻿@page
+@model CriarPedidoModel
+@{
+    ViewData["Title"] = "Criar Pedido";
+}
+<div class="container">
+    <h1 class="mb-4 text-center"><i class="fas fa-shopping-cart text-primary"></i> Criar Pedido</h1>
+
+    <!-- Combobox de Produtos -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Selecione os Produtos</h5>
+            <select id="comboProdutos" class="form-select" multiple></select>
+        </div>
+    </div>
+
+    <!-- Quantidade e Botão Adicionar ao Carrinho -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body d-flex justify-content-between">
+            <div class="d-flex align-items-center">
+                <label for="quantidadeProduto" class="me-2">Quantidade:</label>
+                <input type="number" id="quantidadeProduto" class="form-control w-auto" value="1" min="1">
+            </div>
+            <button id="btnAdicionarProduto" class="btn btn-primary ms-3">Adicionar ao Carrinho</button>
+        </div>
+    </div>
+
+    <!-- Carrinho de Produtos -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Carrinho</h5>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Quantidade</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="carrinhoProdutos">
+                    <tr>
+                        <td colspan="3" class="text-center">Nenhum produto adicionado.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- Indicativo do valor total -->
+            <h5>Total do Pedido: <span id="totalPedido">R$ 0,00</span></h5>
+        </div>
+    </div>
+
+    <!-- Finalizar Pedido -->
+    <button id="btnFinalizarPedido" class="btn btn-success w-100">Finalizar Pedido</button>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const apiProdutosUrl = 'https://localhost:7002/api/Produto'; // Endpoint para listar produtos
+        const apiPedidosUrl = 'https://localhost:7002/api/Pedido';   // Endpoint para criar pedidos
+        let carrinho = [];
+        let produtosDisponiveis = [];
+
+        // Carregar produtos na combobox
+        function carregarProdutos() {
+            $.ajax({
+                url: apiProdutosUrl,
+                method: 'GET',
+                success: function (produtos) {
+                    produtosDisponiveis = produtos;
+                    const combo = $('#comboProdutos');
+                    combo.empty();
+                    if (produtos && produtos.length > 0) {
+                        produtos.forEach(produto => {
+                            combo.append(`<option value="${produto.id}">${produto.nome} - R$${produto.valor.toFixed(2)}</option>`);
+                        });
+                    } else {
+                        combo.append('<option disabled>Nenhum produto disponível</option>');
+                    }
+                },
+                error: function () {
+                    alert('Erro ao carregar os produtos. Verifique a conexão ou a API.');
+                }
+            });
+        }
+
+        carregarProdutos();
+
+        // Adiciona produto ao carrinho
+        $('#btnAdicionarProduto').click(function () {
+            const produtoId = $('#comboProdutos').val(); // Obtém os IDs selecionados
+            const quantidade = parseInt($('#quantidadeProduto').val());
+
+            if (!produtoId || quantidade <= 0) {
+                alert('Selecione um produto válido e uma quantidade maior que 0.');
+                return;
+            }
+
+            produtoId.forEach(id => {
+                const produto = produtosDisponiveis.find(p => p.id === parseInt(id));
+                if (produto) {
+                    const produtoExistente = carrinho.find(p => p.id === produto.id);
+                    if (produtoExistente) {
+                        produtoExistente.quantidade += quantidade;
+                    } else {
+                        carrinho.push({ ...produto, quantidade });
+                    }
+                }
+            });
+
+            atualizarCarrinho();
+        });
+
+        // Atualiza a tabela do carrinho e o valor total
+        function atualizarCarrinho() {
+            const tabela = $('#carrinhoProdutos');
+            tabela.empty();
+            let totalPedido = 0;
+
+            if (carrinho.length > 0) {
+                carrinho.forEach((produto, index) => {
+                    const totalProduto = produto.valor * produto.quantidade;
+                    totalPedido += totalProduto;
+
+                    tabela.append(`
+                            <tr>
+                                <td>${produto.nome}</td>
+                                <td>${produto.quantidade}</td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm" onclick="removerProduto(${index})">Remover</button>
+                                </td>
+                            </tr>
+                        `);
+                });
+
+                $('#totalPedido').text(`R$ ${totalPedido.toFixed(2)}`);
+            } else {
+                tabela.append('<tr><td colspan="3" class="text-center">Nenhum produto adicionado.</td></tr>');
+                $('#totalPedido').text('R$ 0,00');
+            }
+        }
+
+        // Remove um produto do carrinho
+        window.removerProduto = function (index) {
+            carrinho.splice(index, 1);
+            atualizarCarrinho();
+        };
+
+        // Finaliza o pedido
+        $('#btnFinalizarPedido').click(function () {
+            if (carrinho.length === 0) {
+                alert('Adicione produtos ao carrinho antes de finalizar o pedido.');
+                return;
+            }
+
+            const listaIdsProdutos = carrinho.flatMap(p => Array(p.quantidade).fill(p.id));
+            const dataDoPedido = new Date().toISOString();
+
+            const payload = { listaIdsProdutos, dataDoPedido };
+
+            $.ajax({
+                url: apiPedidosUrl,
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(payload),
+                success: function () {
+                    alert('Pedido criado com sucesso!');
+                    carrinho = [];
+                    atualizarCarrinho();
+                },
+                error: function () {
+                    alert('Erro ao criar o pedido. Verifique os dados e tente novamente.');
+                }
+            });
+        });
+    });
+</script>

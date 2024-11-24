@@ -1,0 +1,108 @@
+﻿@page
+@model AreasDeCozinhaModel
+@{
+    ViewData["Title"] = "Áreas de Cozinha";
+}
+
+<div class="container">
+    <h1 class="mb-4 text-center"><i class="fas fa-utensils text-primary"></i> Áreas de Cozinha</h1>
+
+    <!-- Filtros por área de cozinha -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Filtrar Pedidos por Área de Cozinha</h5>
+            <div class="d-flex justify-content-around">
+                <button class="btn btn-outline-primary area-btn" data-area="Fritos">
+                    <i class="fas fa-french-fries"></i> Fritos
+                </button>
+                <button class="btn btn-outline-primary area-btn" data-area="Grelhados">
+                    <i class="fas fa-drumstick-bite"></i> Grelhados
+                </button>
+                <button class="btn btn-outline-primary area-btn" data-area="Saladas">
+                    <i class="fas fa-leaf"></i> Saladas
+                </button>
+                <button class="btn btn-outline-primary area-btn" data-area="Bebidas">
+                    <i class="fas fa-cocktail"></i> Bebidas
+                </button>
+                <button class="btn btn-outline-primary area-btn" data-area="Sobremesas">
+                    <i class="fas fa-ice-cream"></i> Sobremesas
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de Pedidos -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">Pedidos da Área Selecionada</h5>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Produtos</th>
+                    </tr>
+                </thead>
+                <tbody id="listaPedidos">
+                    <tr>
+                        <td colspan="2" class="text-center">Nenhum pedido encontrado.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const apiUrl = 'https://localhost:7002/api/Pedido/area-cozinha';
+
+        // Função para carregar pedidos da área de cozinha
+        function carregarPedidosPorArea(areaCozinha) {
+            const url = `${apiUrl}?areaCozinha=${areaCozinha}`;
+            $.get(url, function (data) {
+                const tabela = $('#listaPedidos');
+                tabela.empty(); // Limpa a tabela
+
+                if (Array.isArray(data) && data.length > 0) {
+                    // Itera pelos pedidos quando a resposta é uma lista válida
+                    data.forEach((pedido, index) => {
+                        let produtosHtml = (pedido.produtos || []).map(produto => `
+                            <li>
+                                ${produto.quantidade || 1}x ${produto.nome || 'Produto desconhecido'} - R$${(produto.valor || 0).toFixed(2)}
+                                (${produto.areaCozinha || 'Área desconhecida'})
+                            </li>
+                        `).join('');
+
+                        tabela.append(`
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>
+                                    <ul class="list-unstyled mb-0">
+                                        ${produtosHtml}
+                                    </ul>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                } else {
+                    // Mostra uma mensagem amigável quando não há pedidos
+                    tabela.append('<tr><td colspan="2" class="text-center">Nenhum pedido encontrado.</td></tr>');
+                }
+            }).fail(function () {
+                // Caso de erro
+                const tabela = $('#listaPedidos');
+                tabela.empty();
+                tabela.append('<tr><td colspan="2" class="text-center">Nenhum pedido encontrado.</td></tr>');
+            });
+        }
+
+        // Evento de clique nos botões das áreas de cozinha
+        $('.area-btn').on('click', function () {
+            const area = $(this).data('area');
+            carregarPedidosPorArea(area);  // Carrega pedidos filtrados pela área
+        });
+
+    });
+</script>
+

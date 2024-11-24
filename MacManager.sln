@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MacManager.Infra", "MacMana
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MacManager.Tests", "MacManager.Tests\MacManager.Tests.csproj", "{7366AADF-1AEF-4FB2-8687-235C61FF8535}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacManager.FrontEnd", "MacManager.FrontEnd\MacManager.FrontEnd.csproj", "{FA708EB3-581B-4018-9E86-199010AC0576}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MacManager.FrontEnd", "MacManager.FrontEnd\MacManager.FrontEnd.csproj", "{FA708EB3-581B-4018-9E86-199010AC0576}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

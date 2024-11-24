@@ -81,6 +81,7 @@ namespace MacManager.API.Controllers
             return Ok(result);
         }
 
+        //Aqui COM CERTEZA valeria ter uma regra para nao excluir produtos que estao envolvidos em transacoes de pedido. Mas por exemplificacao e simplificacao do exemplo , ignorei essa parte propositalmente, mas seria bacana pensar nisso como uma feature proxima.
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletarProduto(int id)
         {

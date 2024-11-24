@@ -1,0 +1,115 @@
+﻿@page
+@model ListagemDePedidosModel
+@{
+    ViewData["Title"] = "Listagem de Pedidos";
+}
+<div class="container">
+    <h1 class="mb-4 text-center"><i class="fas fa-list text-primary"></i> Listagem de Pedidos</h1>
+
+    <!-- Filtro -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Filtrar Pedidos</h5>
+            <form id="filtroPedidosForm">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="statusPedido" id="ativo" value="true" checked>
+                    <label class="form-check-label" for="ativo">Apenas Ativos</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="statusPedido" id="inativo" value="false">
+                    <label class="form-check-label" for="inativo">Ativos e inativos</label>
+                </div>
+                <button type="button" class="btn btn-primary mt-2" id="btnPesquisar">
+                    <i class="fas fa-search"></i> Pesquisar
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lista de Pedidos -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">Pedidos</h5>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Status</th>
+                        <th>Data do Pedido</th>
+                        <th>Produtos</th>
+                        <th>Data de Conclusão</th>
+                    </tr>
+                </thead>
+                <tbody id="listaPedidos">
+                    <tr>
+                        <td colspan="5" class="text-center">Nenhum pedido encontrado.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const apiUrl = 'https://localhost:7002/api/Pedido';
+
+        // Função para carregar pedidos com base no filtro
+        function carregarPedidos(isAtivo) {
+            const url = `${apiUrl}?isAtivo=${isAtivo}`;
+            $.get(url, function (data) {
+                const tabela = $('#listaPedidos');
+                tabela.empty(); // Limpa a tabela
+
+                if (Array.isArray(data) && data.length > 0) {
+                    // Itera pelos pedidos quando a resposta é uma lista válida
+                    data.forEach((pedido, index) => {
+                        let produtosHtml = (pedido.produtos || []).map(produto => `
+                                <li>
+                                    ${produto.quantidade || 1}x ${produto.nome || 'Produto desconhecido'} - R$${(produto.valor || 0).toFixed(2)}
+                                    (${produto.areaCozinha || 'Área desconhecida'})
+                                </li>
+                            `).join('');
+
+                        tabela.append(`
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>${pedido.status || 'Status desconhecido'}</td>
+                                    <td>${pedido.dataDoPedido ? new Date(pedido.dataDoPedido).toLocaleString() : 'Data não disponível'}</td>
+                                    <td>
+                                        <ul class="list-unstyled mb-0">
+                                            ${produtosHtml}
+                                        </ul>
+                                    </td>
+                                    <td>${pedido.dataConclusao ? new Date(pedido.dataConclusao).toLocaleString() : 'N/A'}</td>
+                                </tr>
+                            `);
+                    });
+                } else {
+                    // Mostra uma mensagem amigável quando não há pedidos
+                    tabela.append('<tr><td colspan="5" class="text-center">Nenhum pedido encontrado.</td></tr>');
+                }
+            }).fail(function (xhr) {
+                if (xhr.status !== 404) {
+                    // Mostra o alerta apenas se o erro for diferente de "não encontrado"
+                    console.error('Erro ao carregar os pedidos:', xhr);
+                }
+                const tabela = $('#listaPedidos');
+                tabela.empty();
+                tabela.append('<tr><td colspan="5" class="text-center">Nenhum pedido encontrado.</td></tr>');
+            });
+        }
+
+        // Evento do botão Pesquisar
+        $('#btnPesquisar').on('click', function () {
+            const isAtivo = $('input[name="statusPedido"]:checked').val();
+            carregarPedidos(isAtivo);
+        });
+
+        // Carregar pedidos ativos na inicialização
+        carregarPedidos(true);
+    });
+</script>
+
+

@@ -12,6 +12,7 @@ namespace MacManager.Application.UseCases.Produtos.ListarProdutosUseCase
             _produtoRepository = produtoRepository;
         }
 
+        //listagem simples usando o repositorio , poderia ter mto mais tratativas num cenario real.
         public async Task<ListarProdutosResponse> HandleAsync(ListarProdutosRequest request)
         {
             var produtos = await _produtoRepository.ObterTodosAsync();

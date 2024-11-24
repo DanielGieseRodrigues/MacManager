@@ -58,12 +58,12 @@ namespace MacManager.Application.UseCases.Pedidos.AdicionarPedidoUseCase
 
                 if (pedidoProduto != null)
                 {
-                    // Se o produto já existir no pedido, incrementa a quantidade
+                    //Se o produto já existir no pedido, incrementa a quantidade
                     pedidoProduto.Quantidade++;
                 }
                 else
                 {
-                    // Se o produto não estiver no pedido, adiciona ele com quantidade 1.
+                    //Se o produto não estiver no pedido, adiciona +1.
                     pedido.PedidoProdutos.Add(new PedidoProduto
                     {
                         Pedido = pedido,

@@ -40,8 +40,9 @@ namespace MacManager.Application.UseCases.Pedidos.FecharPedidoUseCase
             }
 
             pedido.StatusPedido = request.AtualizacaoStatus;
-            pedido.DataConclusaoPedido = DateTime.Now;
-            // Atualizar no repositório
+            pedido.DataConclusaoPedido = DateTime.Now; /*importante para nossa regrinha para saber quem ja saiu do sistema, que no caso, quem tem data de conclusao, já está fechado ou recusado */
+
+            // Chama repositorio pra att dos dados.
             await _pedidoRepository.AtualizarAsync(pedido);
 
             return new FecharPedidoResponse

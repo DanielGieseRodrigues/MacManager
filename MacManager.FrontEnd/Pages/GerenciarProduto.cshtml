@@ -21,8 +21,14 @@
                     <select class="form-select" id="areaCozinha">
                         <option value="Fritos">Fritos</option>
                         <option value="Grelhados">Grelhados</option>
+                        <option value="Saladas">Saladas</option>
+                        <option value="Bebidas">Bebidas</option>
                         <option value="Sobremesas">Sobremesas</option>
                     </select>
+                </div>
+                <div class="mb-3">
+                    <label for="valor" class="form-label">Valor</label>
+                    <input type="number" class="form-control" id="valor" placeholder="Digite o valor do produto" step="0.01" required />
                 </div>
                 <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i> Salvar</button>
             </form>
@@ -39,6 +45,7 @@
                         <th>#</th>
                         <th>Nome</th>
                         <th>Área da Cozinha</th>
+                        <th>Valor</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -64,26 +71,106 @@
                 if (data.length > 0) {
                     data.forEach((produto, index) => {
                         tabela.append(`
-                            <tr>
-                                <td>${index + 1}</td>
-                                <td>${produto.nome}</td>
-                                <td>${produto.areaCozinha}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-warning btn-editar" data-id="${produto.id}" data-nome="${produto.nome}" data-area="${produto.areaCozinha}">
-                                        <i class="fas fa-edit"></i> Editar
-                                    </button>
-                                    <button class="btn btn-sm btn-danger btn-excluir" data-id="${produto.id}">
-                                        <i class="fas fa-trash"></i> Excluir
-                                    </button>
-                                </td>
-                            </tr>
-                        `);
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>${produto.nome}</td>
+                                    <td>${produto.areaCozinha}</td>
+                                    <td>${produto.valor.toFixed(2)}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-warning btn-editar" data-id="${produto.id}" data-nome="${produto.nome}" data-area="${produto.areaCozinha}" data-valor="${produto.valor}">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                        <button class="btn btn-sm btn-danger btn-excluir" data-id="${produto.id}">
+                                            <i class="fas fa-trash"></i> Excluir
+                                        </button>
+                                    </td>
+                                </tr>
+                            `);
                     });
                 } else {
-                    tabela.append('<tr><td colspan="4" class="text-center">Nenhum produto encontrado.</td></tr>');
+                    tabela.append('<tr><td colspan="5" class="text-center">Nenhum produto encontrado.</td></tr>');
                 }
             });
         }
+
+        // Salvar Produto (Adicionar ou Editar)
+        $('#produtoForm').on('submit', function (event) {
+            event.preventDefault();
+
+            const produtoId = $('#produtoId').val();
+            const produto = {
+                nome: $('#nome').val(),
+                areaCozinha: $('#areaCozinha').val(),
+                valor: parseFloat($('#valor').val())
+            };
+
+            if (produtoId) {
+                // Editar produto
+                $.ajax({
+                    url: `${apiUrl}/${produtoId}`,
+                    type: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ produto }), // Produto encapsulado em { produto: ... }
+                    success: function () {
+                        alert('Produto atualizado com sucesso!');
+                        carregarProdutos();
+                        $('#produtoForm')[0].reset();
+                        $('#produtoId').val('');
+                    },
+                    error: function () {
+                        alert('Erro ao atualizar o produto.');
+                    }
+                });
+            } else {
+                // Adicionar produto
+                $.ajax({
+                    url: apiUrl,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ produto }), // Produto encapsulado em { produto: ... }
+                    success: function () {
+                        alert('Produto adicionado com sucesso!');
+                        carregarProdutos();
+                        $('#produtoForm')[0].reset();
+                    },
+                    error: function () {
+                        alert('Erro ao adicionar o produto.');
+                    }
+                });
+            }
+        });
+
+
+        // Editar Produto (Preencher formulário)
+        $(document).on('click', '.btn-editar', function () {
+            const id = $(this).data('id');
+            const nome = $(this).data('nome');
+            const area = $(this).data('area');
+            const valor = $(this).data('valor');
+
+            $('#produtoId').val(id);
+            $('#nome').val(nome);
+            $('#areaCozinha').val(area);
+            $('#valor').val(valor);
+        });
+
+        // Excluir Produto
+        $(document).on('click', '.btn-excluir', function () {
+            const id = $(this).data('id');
+            if (confirm('Tem certeza que deseja excluir este produto?')) {
+                $.ajax({
+                    url: `${apiUrl}/${id}`,
+                    type: 'DELETE',
+                    success: function () {
+                        alert('Produto excluído com sucesso!');
+                        carregarProdutos();
+                    },
+                    error: function () {
+                        alert('Erro ao excluir o produto.');
+                    }
+                });
+            }
+        });
 
         // Carregar produtos na inicialização
         carregarProdutos();

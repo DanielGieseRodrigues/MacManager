@@ -1,0 +1,133 @@
+﻿@page
+@model EncerrarPedidoModel
+@{
+    ViewData["Title"] = "Encerrar Pedido";
+}
+<div class="container">
+    <h1 class="mb-4 text-center"><i class="fas fa-box text-primary"></i> Encerrar Pedido</h1>
+
+    <!-- Lista de Pedidos Ativos -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Pedidos Ativos</h5>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Status</th>
+                        <th>Data do Pedido</th>
+                        <th>Produtos</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="listaPedidosAtivos">
+                    <tr>
+                        <td colspan="5" class="text-center">Nenhum pedido ativo encontrado.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const apiPedidosAtivosUrl = 'https://localhost:7002/api/Pedido?isAtivo=true';  // Endpoint para pedidos ativos
+        const apiAtualizarStatusUrl = 'https://localhost:7002/api/Pedido/1/status';  // Endpoint para atualizar status (recusar ou concluir)
+
+        // Carregar pedidos ativos
+        function carregarPedidosAtivos() {
+            $.ajax({
+                url: apiPedidosAtivosUrl,
+                method: 'GET',
+                success: function (data) {
+                    const tabela = $('#listaPedidosAtivos');
+                    tabela.empty(); // Limpa a tabela
+
+                    if (Array.isArray(data) && data.length > 0) {
+                        // Itera pelos pedidos e adiciona à tabela
+                        data.forEach((pedido, index) => {
+                            let produtosHtml = (pedido.produtos || []).map(produto => `
+                                    <li>
+                                        ${produto.quantidade || 1}x ${produto.nome || 'Produto desconhecido'} - R$${(produto.valor || 0).toFixed(2)}
+                                        (${produto.areaCozinha || 'Área desconhecida'})
+                                    </li>
+                                `).join('');
+
+                            tabela.append(`
+                                    <tr>
+                                        <td>${index + 1}</td>
+                                        <td>${pedido.status || 'Status desconhecido'}</td>
+                                        <td>${pedido.dataDoPedido ? new Date(pedido.dataDoPedido).toLocaleString() : 'Data não disponível'}</td>
+                                        <td>
+                                            <ul class="list-unstyled mb-0">
+                                                ${produtosHtml}
+                                            </ul>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-success btn-sm" onclick="concluirPedido(${pedido.id})">Concluir</button>
+                                            <button class="btn btn-danger btn-sm" onclick="recusarPedido(${pedido.id})">Recusar</button>
+                                        </td>
+                                    </tr>
+                                `);
+                        });
+                    } else {
+                        // Mostra uma mensagem quando não há pedidos ativos
+                        tabela.append('<tr><td colspan="5" class="text-center">Nenhum pedido ativo encontrado.</td></tr>');
+                    }
+                },
+                error: function () {
+                    const tabela = $('#listaPedidosAtivos');
+                    tabela.empty();
+                    tabela.append('<tr><td colspan="5" class="text-center">Nenhum pedido ativo encontrado.</td></tr>');
+                }
+            });
+        }
+
+        // Concluir Pedido
+        window.concluirPedido = function (pedidoId) {
+            if (confirm('Tem certeza que deseja concluir este pedido?')) {
+                $.ajax({
+                    url: `${apiAtualizarStatusUrl.replace('1', pedidoId)}`,
+                    method: 'PATCH',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        atualizacaoStatus: 'Fechado'
+                    }),
+                    success: function () {
+                        alert('Pedido concluído com sucesso!');
+                        carregarPedidosAtivos(); // Recarrega a lista de pedidos
+                    },
+                    error: function () {
+                        alert('Erro ao concluir o pedido. Tente novamente.');
+                    }
+                });
+            }
+        };
+
+        // Recusar Pedido
+        window.recusarPedido = function (pedidoId) {
+            if (confirm('Tem certeza que deseja recusar este pedido?')) {
+                $.ajax({
+                    url: `${apiAtualizarStatusUrl.replace('1', pedidoId)}`,
+                    method: 'PATCH',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        atualizacaoStatus: 'Recusado'
+                    }),
+                    success: function () {
+                        alert('Pedido recusado com sucesso!');
+                        carregarPedidosAtivos(); // Recarrega a lista de pedidos
+                    },
+                    error: function () {
+                        alert('Erro ao recusar o pedido. Tente novamente.');
+                    }
+                });
+            }
+        };
+
+        // Carregar pedidos ativos na inicialização
+        carregarPedidosAtivos();
+    });
+</script>
