@@ -1,15 +1,13 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Nao mexi em NADA aqui, usei o razor mais para subir o server e permitir navegacao e cors do que qualquer coisa, nao pretendo usar  o two way databinding, acho que o jquery + bootstrap vai ser mais pratico pra demonstrar a api.
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 

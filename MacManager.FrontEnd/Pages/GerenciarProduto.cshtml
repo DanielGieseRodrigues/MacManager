@@ -6,7 +6,7 @@
 <div class="container">
     <h1 class="mb-4 text-center"><i class="fas fa-box text-primary"></i> Gerenciar Produtos</h1>
 
-    <!-- Formulário de Produto -->
+    <!-- Formulário -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <h5 class="card-title">Adicionar/Editar Produto</h5>
@@ -50,7 +50,7 @@
                     </tr>
                 </thead>
                 <tbody id="listaProdutos">
-                    <!-- Os produtos serão carregados aqui -->
+                    <!-- Os produtos serão carregados aqui via o append do jquery -->
                 </tbody>
             </table>
         </div>
@@ -110,7 +110,7 @@
                     url: `${apiUrl}/${produtoId}`,
                     type: 'PUT',
                     contentType: 'application/json',
-                    data: JSON.stringify({ produto }), // Produto encapsulado em { produto: ... }
+                    data: JSON.stringify({ produto }),
                     success: function () {
                         alert('Produto atualizado com sucesso!');
                         carregarProdutos();
@@ -127,7 +127,7 @@
                     url: apiUrl,
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({ produto }), // Produto encapsulado em { produto: ... }
+                    data: JSON.stringify({ produto }),
                     success: function () {
                         alert('Produto adicionado com sucesso!');
                         carregarProdutos();
@@ -141,7 +141,7 @@
         });
 
 
-        // Editar Produto (Preencher formulário)
+        // evento para editar produto no form
         $(document).on('click', '.btn-editar', function () {
             const id = $(this).data('id');
             const nome = $(this).data('nome');
@@ -154,7 +154,7 @@
             $('#valor').val(valor);
         });
 
-        // Excluir Produto
+        //excluir Produto
         $(document).on('click', '.btn-excluir', function () {
             const id = $(this).data('id');
             if (confirm('Tem certeza que deseja excluir este produto?')) {
@@ -172,7 +172,7 @@
             }
         });
 
-        // Carregar produtos na inicialização
+        //carregar produtos no start da tela.
         carregarProdutos();
     });
 </script>

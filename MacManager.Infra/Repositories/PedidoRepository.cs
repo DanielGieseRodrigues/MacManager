@@ -17,7 +17,7 @@ namespace MacManager.Infra.Repositories
             //Dando o include para forçar o tracking do entity, importancia do ThenInclude tbm destacada.
             if (isAtivo)
             {
-                return await _context.Pedidos.Where(P=> P.DataConclusaoPedido == null)
+                return await _context.Pedidos.Where(P => P.DataConclusaoPedido == null)
                                .Include(p => p.PedidoProdutos)
                                    .ThenInclude(pp => pp.Produto)
                                     .ToListAsync();

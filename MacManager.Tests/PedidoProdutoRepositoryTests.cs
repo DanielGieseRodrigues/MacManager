@@ -3,12 +3,10 @@ using MacManager.Domain.ValueObjects;
 using MacManager.Infra.Data;
 using MacManager.Infra.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
 
 namespace MacManager.Tests
 {
+    //Caberiam muito mais testes em um cenario real, incluindo sonar cube, considero uma meta de 70% de cobertura uma boa margem, aqui deixei a cobertura baixa e foquei mais na parte didatica / exemplo.
     public class PedidoProdutoRepositoryTests
     {
         private readonly MacManagerContext _context;
@@ -58,17 +56,17 @@ namespace MacManager.Tests
                 },
                 Quantidade = 3,
                 PedidoId = 3,
-                Pedido = new Pedido { Id = 3 } 
+                Pedido = new Pedido { Id = 3 }
             };
 
             //Adicionando os dados no contexto (banco de dados simulado)
             _context.PedidoProdutos.AddRange(pedidoProduto1, pedidoProduto2, pedidoProduto3);
-            await _context.SaveChangesAsync(); 
+            await _context.SaveChangesAsync();
 
             Assert.Equal(3, _context.PedidoProdutos.Count()); /*Da uma checada se os valores foram inseridos corretamente */
 
             // Act
-            var repository = new PedidoProdutoRepository(_context); 
+            var repository = new PedidoProdutoRepository(_context);
             var result = await repository.ObterPedidosPorAreaCozinhaAsync(AreaCozinha.Fritos); // Busca por categoria de fritos
 
             // Assert

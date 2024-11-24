@@ -7,6 +7,7 @@ using Moq;
 
 namespace MacManager.Tests
 {
+    //Caberiam muito mais testes em um cenario real, incluindo sonar cube, considero uma meta de 70% de cobertura uma boa margem, aqui deixei a cobertura baixa e foquei mais na parte didatica / exemplo.
     public class ListarPedidosPorAreaUseCaseTests
     {
         private readonly Mock<IPedidoRepository> _pedidoRepositoryMock;

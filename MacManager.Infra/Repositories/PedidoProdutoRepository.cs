@@ -35,7 +35,7 @@ namespace MacManager.Infra.Repositories
         public async Task<IEnumerable<PedidoProduto>> ObterPedidosPorAreaCozinhaAsync(AreaCozinha areaCozinha)
         {
             // Buscar pedidos com produtos filtrados por área de cozinha (usando o enum) e retornar PedidoProduto, Uso do include para tracking, e evitando de ver inativos.
-            return await _context.PedidoProdutos.Where(p=> p.Pedido.DataConclusaoPedido == null)
+            return await _context.PedidoProdutos.Where(p => p.Pedido.DataConclusaoPedido == null)
                 .Include(pp => pp.Pedido)
                 .Include(pp => pp.Produto)
                 .Where(pp => pp.Produto.AreaCozinha == areaCozinha)

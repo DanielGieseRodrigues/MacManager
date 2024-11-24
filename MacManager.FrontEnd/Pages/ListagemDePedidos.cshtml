@@ -6,7 +6,7 @@
 <div class="container">
     <h1 class="mb-4 text-center"><i class="fas fa-list text-primary"></i> Listagem de Pedidos</h1>
 
-    <!-- Filtro -->
+    <!-- Filtro de ativo ou nao, comeca considerando ativos apenas-->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <h5 class="card-title">Filtrar Pedidos</h5>
@@ -53,7 +53,7 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     $(document).ready(function () {
-        const apiUrl = 'https://localhost:7002/api/Pedido';
+        const apiUrl = 'https://localhost:7002/api/Pedido'; // endpoint da nossa api, mais uma vez : poderia estar em um arquivo so disso de consts.
 
         // Função para carregar pedidos com base no filtro
         function carregarPedidos(isAtivo) {
@@ -63,7 +63,7 @@
                 tabela.empty(); // Limpa a tabela
 
                 if (Array.isArray(data) && data.length > 0) {
-                    // Itera pelos pedidos quando a resposta é uma lista válida
+                    // Percorre os pedidos quando a resposta esta ok
                     data.forEach((pedido, index) => {
                         let produtosHtml = (pedido.produtos || []).map(produto => `
                                 <li>
@@ -87,12 +87,12 @@
                             `);
                     });
                 } else {
-                    // Mostra uma mensagem amigável quando não há pedidos
+                    // retorno base
                     tabela.append('<tr><td colspan="5" class="text-center">Nenhum pedido encontrado.</td></tr>');
                 }
             }).fail(function (xhr) {
                 if (xhr.status !== 404) {
-                    // Mostra o alerta apenas se o erro for diferente de "não encontrado"
+                    // Mostra o alerta apenas se o erro for diferente de "não encontrado", senao fica popando fulltime quando nao tem nada. Daria pra fazer de forma mais elegante. mas funciona legal.
                     console.error('Erro ao carregar os pedidos:', xhr);
                 }
                 const tabela = $('#listaPedidos');
@@ -101,13 +101,13 @@
             });
         }
 
-        // Evento do botão Pesquisar
+        // onclick do botao Pesquisar
         $('#btnPesquisar').on('click', function () {
             const isAtivo = $('input[name="statusPedido"]:checked').val();
             carregarPedidos(isAtivo);
         });
 
-        // Carregar pedidos ativos na inicialização
+        // Carregar pedidos ativos no onload da pagina
         carregarPedidos(true);
     });
 </script>

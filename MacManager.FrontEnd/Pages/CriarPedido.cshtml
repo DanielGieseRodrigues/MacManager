@@ -6,7 +6,7 @@
 <div class="container">
     <h1 class="mb-4 text-center"><i class="fas fa-shopping-cart text-primary"></i> Criar Pedido</h1>
 
-    <!-- Combobox de Produtos -->
+    <!--Produtos -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <h5 class="card-title">Selecione os Produtos</h5>
@@ -14,7 +14,7 @@
         </div>
     </div>
 
-    <!-- Quantidade e Botão Adicionar ao Carrinho -->
+    <!-- Quantidade e Add ao Carrinho -->
     <div class="card shadow-sm mb-4">
         <div class="card-body d-flex justify-content-between">
             <div class="d-flex align-items-center">
@@ -43,12 +43,12 @@
                     </tr>
                 </tbody>
             </table>
-            <!-- Indicativo do valor total -->
+            <!-- Valor total, acho que isso seria legal se fosse uma propriedade interna tbm, mas agora ja foi rs. -->
             <h5>Total do Pedido: <span id="totalPedido">R$ 0,00</span></h5>
         </div>
     </div>
 
-    <!-- Finalizar Pedido -->
+    <!-- finaliza o pedido -->
     <button id="btnFinalizarPedido" class="btn btn-success w-100">Finalizar Pedido</button>
 </div>
 
@@ -87,7 +87,7 @@
 
         // Adiciona produto ao carrinho
         $('#btnAdicionarProduto').click(function () {
-            const produtoId = $('#comboProdutos').val(); // Obtém os IDs selecionados
+            const produtoId = $('#comboProdutos').val(); //Captura do DOM os valores selecionados no combo multiselecao.
             const quantidade = parseInt($('#quantidadeProduto').val());
 
             if (!produtoId || quantidade <= 0) {
@@ -110,7 +110,7 @@
             atualizarCarrinho();
         });
 
-        // Atualiza a tabela do carrinho e o valor total
+        // Atualiza a tabela do carrinho e o valor total, eu imagino que essa nao sao as melhores praticas mas num cenario real existiria um componente de grid ja estabelecido, ou um framework, etc etc e todo um jeitao de fazer isso, aqui esse artificio funcionou :).
         function atualizarCarrinho() {
             const tabela = $('#carrinhoProdutos');
             tabela.empty();
@@ -145,7 +145,7 @@
             atualizarCarrinho();
         };
 
-        // Finaliza o pedido
+        //Finaliza o pedido
         $('#btnFinalizarPedido').click(function () {
             if (carrinho.length === 0) {
                 alert('Adicione produtos ao carrinho antes de finalizar o pedido.');

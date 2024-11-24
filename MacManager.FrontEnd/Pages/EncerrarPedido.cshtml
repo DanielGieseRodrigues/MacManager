@@ -6,7 +6,7 @@
 <div class="container">
     <h1 class="mb-4 text-center"><i class="fas fa-box text-primary"></i> Encerrar Pedido</h1>
 
-    <!-- Lista de Pedidos Ativos -->
+    <!-- Lista de Pedidos . Obs > Somente os ativos seram exibidos aqui e isso é garantido pelo back end. (Nossa api) -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <h5 class="card-title">Pedidos Ativos</h5>
@@ -34,9 +34,9 @@
 <script>
     $(document).ready(function () {
         const apiPedidosAtivosUrl = 'https://localhost:7002/api/Pedido?isAtivo=true';  // Endpoint para pedidos ativos
-        const apiAtualizarStatusUrl = 'https://localhost:7002/api/Pedido/1/status';  // Endpoint para atualizar status (recusar ou concluir)
+        const apiAtualizarStatusUrl = 'https://localhost:7002/api/Pedido/1/status';  // Endpoint para atualizar status (recusar ou concluir). ( Esses endpoints ficariam legal em um arquivo de constantes, mas aqui eh  mto pequeninho e nao quero dar um overkill na logica).
 
-        // Carregar pedidos ativos
+        // Carregar pedidos ativos ( back end garante que sao ativos )
         function carregarPedidosAtivos() {
             $.ajax({
                 url: apiPedidosAtivosUrl,
@@ -46,7 +46,7 @@
                     tabela.empty(); // Limpa a tabela
 
                     if (Array.isArray(data) && data.length > 0) {
-                        // Itera pelos pedidos e adiciona à tabela
+                        // percorre pelos pedidos e adiciona a tabelA.
                         data.forEach((pedido, index) => {
                             let produtosHtml = (pedido.produtos || []).map(produto => `
                                     <li>
@@ -73,7 +73,7 @@
                                 `);
                         });
                     } else {
-                        // Mostra uma mensagem quando não há pedidos ativos
+                        //Mostra uma mensagem quando não há pedidos ativos
                         tabela.append('<tr><td colspan="5" class="text-center">Nenhum pedido ativo encontrado.</td></tr>');
                     }
                 },
@@ -85,7 +85,7 @@
             });
         }
 
-        // Concluir Pedido
+        //Logica de concluir ( Fechar ) pedido.
         window.concluirPedido = function (pedidoId) {
             if (confirm('Tem certeza que deseja concluir este pedido?')) {
                 $.ajax({
@@ -106,7 +106,7 @@
             }
         };
 
-        // Recusar Pedido
+        //Logica de recusar pedido.
         window.recusarPedido = function (pedidoId) {
             if (confirm('Tem certeza que deseja recusar este pedido?')) {
                 $.ajax({
@@ -127,7 +127,7 @@
             }
         };
 
-        // Carregar pedidos ativos na inicialização
+        // Carregar pedidos ativos no On Load do jquery.
         carregarPedidosAtivos();
     });
 </script>
